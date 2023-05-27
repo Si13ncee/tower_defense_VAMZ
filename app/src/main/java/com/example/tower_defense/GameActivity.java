@@ -3,15 +3,16 @@ package com.example.tower_defense;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.WindowManager;
+import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
+
+    public GameActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_menu);
-
-
+        setContentView(R.layout.activity_game);
     }
 }

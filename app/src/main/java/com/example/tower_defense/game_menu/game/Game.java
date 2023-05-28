@@ -64,6 +64,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+
         gameLoopThread.start();
     }
 

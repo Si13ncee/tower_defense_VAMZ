@@ -1,12 +1,13 @@
-package com.example.tower_defense.game_menu.Towers;
+package com.example.tower_defense.game_menu.spirtesControl.Towers;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.tower_defense.R;
 import com.example.tower_defense.game_menu.GameActivity;
+import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 
-public enum towerList {
+public enum towerList implements IBitMapFunctions {
 
     ARCHER(R.drawable.archer_tower); //64x42
 
@@ -23,6 +24,7 @@ public enum towerList {
         }
     }
 
+
     public Bitmap getSpriteSheet() {
         return spriteSheet;
     }
@@ -30,5 +32,6 @@ public enum towerList {
     public Bitmap getSprite(int pos) {
         return sprite[pos];
     }
+
 
 }

@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.example.tower_defense.game_menu.game.Game;
 
-public class GameActivity extends AppCompatActivity{
+public class GameActivity extends AppCompatActivity {
 
     private static Context context;
 

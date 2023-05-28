@@ -8,14 +8,20 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+
 import androidx.annotation.NonNull;
 
-import com.example.tower_defense.game_menu.Towers.towerList;
+import com.example.tower_defense.game_menu.spirtesControl.Towers.towerList;
+import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
+import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
+
+import java.util.ArrayList;
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     private Paint paint = new Paint();
     private SurfaceHolder holder;
+    private ArrayList<entity> enemies = new ArrayList<>();
 
     public Game(Context context) {
         super(context);
@@ -33,7 +39,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(towerList.ARCHER.getSprite(1),500, 700, null);
         canvas.drawBitmap(towerList.ARCHER.getSprite(2),500, 900, null);
 
-        canvas.drawRect(50,50,100,100,this.paint);
+        for (entity e: enemies) {
+            canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
+        }
+
+
         holder.unlockCanvasAndPost(canvas);
     }
 
@@ -57,6 +67,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            this.enemies.add(new entity((int) event.getX(), (int) event.getY(), enemiesList.MAGMA_CRAB));
             this.render();
         }
         return true;

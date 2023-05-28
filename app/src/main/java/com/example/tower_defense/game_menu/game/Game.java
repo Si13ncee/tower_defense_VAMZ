@@ -1,9 +1,11 @@
 package com.example.tower_defense.game_menu.game;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -16,18 +18,28 @@ import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-public class Game extends SurfaceView implements SurfaceHolder.Callback {
+import kotlin.jvm.Synchronized;
 
+public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+
+    private Random rand;
     private Paint paint = new Paint();
     private SurfaceHolder holder;
     private ArrayList<entity> enemies = new ArrayList<>();
+    private Thread gameLoopThread;
+
 
     public Game(Context context) {
         super(context);
         holder = getHolder();
         holder.addCallback(this);
         this.paint.setColor(Color.BLUE);
+        this.gameLoopThread = new Thread(this);
+        this.rand = new Random();
+
+
     }
 
     public void render() {
@@ -39,9 +51,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         canvas.drawBitmap(towerList.ARCHER.getSprite(1),500, 700, null);
         canvas.drawBitmap(towerList.ARCHER.getSprite(2),500, 900, null);
 
-        for (entity e: enemies) {
-            canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
+        synchronized(this.enemies) {
+            for (entity e: enemies) {
+                canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
+            }
         }
+
 
 
         holder.unlockCanvasAndPost(canvas);
@@ -49,9 +64,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
-        Canvas canvas = surfaceHolder.lockCanvas();
-        canvas.drawRect(50,50,100,100,this.paint);
-        surfaceHolder.unlockCanvasAndPost(canvas);
+        gameLoopThread.start();
     }
 
     @Override
@@ -65,12 +78,58 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            this.enemies.add(new entity((int) event.getX(), (int) event.getY(), enemiesList.MAGMA_CRAB));
-            this.render();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            this.gameLoopThread.interrupt();
         }
         return true;
     }
 
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            synchronized (this.enemies) {
+                this.enemies.add(new entity((int) event.getX(), (int) event.getY(), enemiesList.MAGMA_CRAB));
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                this.update();
+                this.render();
+            } catch (NullPointerException npt) {
+                System.out.println("npt");
+                break;
+            }
+
+        }
+    }
+
+    private void update() {
+        synchronized (this.enemies) {
+            int direction = 0; //0 = y--, 1 = x++, 2 = y++, 3 = x--
+            for (entity e: this.enemies) {
+                direction = this.rand.nextInt(4);
+                switch (direction) {
+                    case 0:
+                        e.setPosY(e.getPosY() - 4);
+                        break;
+                    case 1:
+                        e.setPosX(e.getPosX() + 4);
+                        break;
+                    case 2:
+                        e.setPosY(e.getPosY() + 4);
+                        break;
+                    case 3:
+                        e.setPosX(e.getPosX() - 4);
+                        break;
+                }
+            }
+        }
+    }
 }

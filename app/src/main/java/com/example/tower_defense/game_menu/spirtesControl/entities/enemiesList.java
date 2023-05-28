@@ -11,9 +11,9 @@ import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 public enum enemiesList implements IBitMapFunctions {
 
     MAGMA_CRAB(R.drawable.magma_crab);
-    private Bitmap spriteSheet;
-    private BitmapFactory.Options options = new BitmapFactory.Options();
-    private Bitmap[][] sprite = new Bitmap[9][8];
+    private final Bitmap spriteSheet;
+    private final BitmapFactory.Options options = new BitmapFactory.Options();
+    private final Bitmap[][] sprite = new Bitmap[9][8];
 
     enemiesList(int resID) {
         options.inScaled = false; // to get rid of image scaling

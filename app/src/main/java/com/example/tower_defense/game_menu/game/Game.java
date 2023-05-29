@@ -1,7 +1,7 @@
 package com.example.tower_defense.game_menu.game;
 
 import android.content.Context;
-import android.content.Intent;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,9 +13,13 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
+import com.example.tower_defense.R;
+import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.Towers.towerList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
+import com.example.tower_defense.game_menu.spirtesControl.enviroment.ETileType;
+import com.example.tower_defense.game_menu.spirtesControl.enviroment.TileManager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -29,6 +33,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     private SurfaceHolder holder;
     private ArrayList<entity> enemies = new ArrayList<>();
     private Thread gameLoopThread;
+    private TileManager tm = new TileManager();
 
 
     public Game(Context context) {
@@ -40,20 +45,24 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
         this.rand = new Random();
 
 
+
+
     }
 
     public void render() {
         Canvas canvas = holder.lockCanvas();
         canvas.drawColor(Color.BLACK);
-        canvas.drawBitmap(towerList.ARCHER.getSpriteSheet(), 0, 500, null);
+        //canvas.drawBitmap(towerList.ARCHER.getSpriteSheet(), 0, 500, null);
 
-        canvas.drawBitmap(towerList.ARCHER.getSprite(0),500, 500, null);
-        canvas.drawBitmap(towerList.ARCHER.getSprite(1),500, 700, null);
-        canvas.drawBitmap(towerList.ARCHER.getSprite(2),500, 900, null);
+        //canvas.drawBitmap(towerList.ARCHER.getSprite(0),500, 500, null);
+        //canvas.drawBitmap(towerList.ARCHER.getSprite(1),500, 700, null);
+        //canvas.drawBitmap(towerList.ARCHER.getSprite(2),500, 900, null);
+
+        this.tm.renderTiles(canvas);
 
         synchronized(this.enemies) {
             for (entity e: enemies) {
-                canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
+               canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
             }
         }
 
@@ -64,8 +73,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
-
         gameLoopThread.start();
+
+        for (int i = 0; i < 10; i++) {
+            synchronized (this.enemies) {
+                this.enemies.add(new entity(rand.nextInt(GameActivity.getScreenWidth()), rand.nextInt(GameActivity.getScreenHeight()), enemiesList.MAGMA_CRAB));
+            }
+        }
     }
 
     @Override
@@ -90,9 +104,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            synchronized (this.enemies) {
-                this.enemies.add(new entity((int) event.getX(), (int) event.getY(), enemiesList.MAGMA_CRAB));
-            }
+            //synchronized (this.enemies) {
+             //   this.enemies.add(new entity((int) event.getX(), (int) event.getY(), enemiesList.MAGMA_CRAB));
+            //}
+            this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
         }
         return true;
     }

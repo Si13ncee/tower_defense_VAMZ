@@ -28,6 +28,10 @@ public enum enemiesList implements IBitMapFunctions {
         return spriteSheet;
     }
 
+    @Override
+    public Bitmap getScaledBitmap(Bitmap bitmap) {
+        return Bitmap.createScaledBitmap(bitmap, (int)Math.floor(bitmap.getWidth()), (int)Math.floor(bitmap.getHeight()), false);
+    }
     public Bitmap getSprite(int posY, int posX) {
         return sprite[posY][posX];
     }

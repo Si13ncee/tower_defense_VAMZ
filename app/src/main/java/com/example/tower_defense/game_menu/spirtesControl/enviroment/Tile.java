@@ -7,12 +7,15 @@ public class Tile {
     private int posX;
     private int posY;
     private ETileType tileType;
+    private boolean selected = false;
 
     public Tile(int posX, int posY, ETileType type) {
         this.posX = posX;
         this.posY = posY;
         this.tileType = type;
     }
+
+
 
     public int getPosX() {
         return posX;
@@ -32,5 +35,13 @@ public class Tile {
 
     public void setPosY(int posY) {
         this.posY = posY;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

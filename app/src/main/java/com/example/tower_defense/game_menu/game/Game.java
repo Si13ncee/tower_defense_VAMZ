@@ -29,7 +29,7 @@ import kotlin.jvm.Synchronized;
 public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
     private Random rand;
-    private Paint paint = new Paint();
+
     private SurfaceHolder holder;
     private ArrayList<entity> enemies = new ArrayList<>();
     private Thread gameLoopThread;
@@ -38,27 +38,20 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
     public Game(Context context) {
         super(context);
+
         holder = getHolder();
         holder.addCallback(this);
-        this.paint.setColor(Color.BLUE);
+
         this.gameLoopThread = new Thread(this);
         this.rand = new Random();
-
-
-
-
     }
 
     public void render() {
         Canvas canvas = holder.lockCanvas();
         canvas.drawColor(Color.BLACK);
-        //canvas.drawBitmap(towerList.ARCHER.getSpriteSheet(), 0, 500, null);
-
-        //canvas.drawBitmap(towerList.ARCHER.getSprite(0),500, 500, null);
-        //canvas.drawBitmap(towerList.ARCHER.getSprite(1),500, 700, null);
-        //canvas.drawBitmap(towerList.ARCHER.getSprite(2),500, 900, null);
 
         this.tm.renderTiles(canvas);
+
 
         synchronized(this.enemies) {
             for (entity e: enemies) {
@@ -104,10 +97,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            //synchronized (this.enemies) {
-             //   this.enemies.add(new entity((int) event.getX(), (int) event.getY(), enemiesList.MAGMA_CRAB));
-            //}
-            this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
+            this.tm.unselectTile();
+            this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))).setSelected(true);
+            //this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
         }
         return true;
     }

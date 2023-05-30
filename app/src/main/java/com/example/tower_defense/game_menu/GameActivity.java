@@ -3,7 +3,6 @@ package com.example.tower_defense.game_menu;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -15,6 +14,11 @@ public class GameActivity extends AppCompatActivity {
     private static Context context;
     private static int ScreenWidth;
     private static int ScreenHeight;
+    private static double scalingY;
+    private static double scalingX;
+    private static int mapSizeY = 10;
+    private static int mapSizeX = 20;
+
 
 
     public static Context getGameContext() {
@@ -29,14 +33,33 @@ public class GameActivity extends AppCompatActivity {
         return ScreenHeight;
     }
 
+    public static double getScalingY() {
+        return scalingY;
+    }
+
+    public static int getMapSizeX() {
+        return mapSizeX;
+    }
+
+    public static int getMapSizeY() {
+        return mapSizeY;
+    }
+
+    public static double getScalingX() {
+        return scalingX;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
+
+
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getRealMetrics(dm);
         System.out.println("W: " + dm.widthPixels + " H: " + dm.heightPixels);
+
         ScreenWidth = dm.widthPixels;
         ScreenHeight = dm.heightPixels;
 
@@ -49,6 +72,9 @@ public class GameActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 );
 
+        scalingX = ((double) ScreenWidth / (mapSizeX + 1) )/ 32;
+        scalingY = ((double) ScreenHeight / mapSizeY) / 32;
+        System.out.println("Scaling: " + scalingY);
         setContentView(new Game(this));
     }
 

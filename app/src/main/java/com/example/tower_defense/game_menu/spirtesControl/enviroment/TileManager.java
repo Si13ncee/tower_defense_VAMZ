@@ -103,15 +103,25 @@ public class TileManager implements IBitMapFunctions {
     }
 
     public void setSelectedTyle(Tile selectedTyle) {
-        synchronized (this.tiles) {
-            for (int posY = 0; posY < GameActivity.getMapSizeY(); posY++){
-                for (int posX = 0; posX < GameActivity.getMapSizeX(); posX++) {
-                    if (this.tiles[posY][posX] == selectedTyle) {
-                        this.tiles[posY][posX].setSelected(true);
+        if (this.selectedTyle == selectedTyle && this.selectedTyle != null) {
+            this.selectedTyle.setSelected(false);
+            this.selectedTyle = null;
+        } else {
+            this.unselectTile();
+            System.out.println("DEBUG!");
+            synchronized (this.tiles) {
+                for (int posY = 0; posY < GameActivity.getMapSizeY(); posY++){
+                    for (int posX = 0; posX < GameActivity.getMapSizeX(); posX++) {
+                        if (this.tiles[posY][posX] == selectedTyle) {
+                            this.tiles[posY][posX].setSelected(true);
+                            this.selectedTyle = selectedTyle;
+
+                        }
                     }
                 }
+
             }
         }
-        this.selectedTyle = selectedTyle;
+
     }
 }

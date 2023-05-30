@@ -97,8 +97,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            this.tm.unselectTile();
-            this.tm.setSelectedTyle(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
+                this.tm.setSelectedTyle(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
+
             //this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
         }
         return true;

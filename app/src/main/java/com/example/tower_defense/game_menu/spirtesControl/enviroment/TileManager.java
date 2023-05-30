@@ -2,7 +2,7 @@ package com.example.tower_defense.game_menu.spirtesControl.enviroment;
 
 import android.graphics.Canvas;
 
-import com.example.tower_defense.R;
+
 import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 import com.example.tower_defense.game_menu.spirtesControl.player.EPlayerControl;
@@ -22,7 +22,7 @@ public class TileManager implements IBitMapFunctions {
 
 
     public TileManager() {
-        System.out.println(this.Ypolicka);
+        System.out.println(Ypolicka);
         createMap();
         createAnimation();
     }
@@ -52,7 +52,7 @@ public class TileManager implements IBitMapFunctions {
 
     public void createTile(ETileType type, int posX, int posY){
         synchronized (this.tiles) {
-            this.tiles[posY][posX] = new Tile(this.Xpolicka * posX, this.Ypolicka * posY, type);
+            this.tiles[posY][posX] = new Tile(Xpolicka * posX, Ypolicka * posY, type);
         }
     }
 
@@ -108,7 +108,6 @@ public class TileManager implements IBitMapFunctions {
             this.selectedTyle = null;
         } else {
             this.unselectTile();
-            System.out.println("DEBUG!");
             synchronized (this.tiles) {
                 for (int posY = 0; posY < GameActivity.getMapSizeY(); posY++){
                     for (int posX = 0; posX < GameActivity.getMapSizeX(); posX++) {

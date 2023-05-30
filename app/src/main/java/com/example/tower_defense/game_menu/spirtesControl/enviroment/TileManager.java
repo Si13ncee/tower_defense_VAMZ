@@ -72,6 +72,7 @@ public class TileManager implements IBitMapFunctions {
                         } else if (45 <= this.tyleSelected && !(this.tyleSelected > 60)) {
                             c.drawBitmap(this.selectionAnimation[1].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
                         } else {
+                            c.drawBitmap(this.selectionAnimation[0].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
                             this.tyleSelected = 0;
                         }
                     }
@@ -95,5 +96,22 @@ public class TileManager implements IBitMapFunctions {
                 }
             }
         }
+    }
+
+    public Tile getSelectedTyle() {
+        return selectedTyle;
+    }
+
+    public void setSelectedTyle(Tile selectedTyle) {
+        synchronized (this.tiles) {
+            for (int posY = 0; posY < GameActivity.getMapSizeY(); posY++){
+                for (int posX = 0; posX < GameActivity.getMapSizeX(); posX++) {
+                    if (this.tiles[posY][posX] == selectedTyle) {
+                        this.tiles[posY][posX].setSelected(true);
+                    }
+                }
+            }
+        }
+        this.selectedTyle = selectedTyle;
     }
 }

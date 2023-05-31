@@ -1,12 +1,11 @@
 package com.example.tower_defense.game_menu.spirtesControl.enviroment;
 
-import static com.example.tower_defense.game_menu.Constants.Dimensions.Xpolicka;
-import static com.example.tower_defense.game_menu.Constants.Dimensions.Ypolicka;
+import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLICKA_X;
+import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLICKA_Y;
 
 import android.graphics.Canvas;
 
 
-import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 import com.example.tower_defense.game_menu.spirtesControl.player.EPlayerControl;
@@ -24,7 +23,7 @@ public class TileManager implements IBitMapFunctions {
 
 
     public TileManager() {
-        System.out.println(Ypolicka);
+        System.out.println(SIZE_POLICKA_Y);
         createMap();
         createAnimation();
     }
@@ -51,7 +50,7 @@ public class TileManager implements IBitMapFunctions {
 
     public void createTile(ETileType type, int posX, int posY){
         synchronized (this.tiles) {
-            this.tiles[posY][posX] = new Tile(Xpolicka * posX, Ypolicka * posY, type);
+            this.tiles[posY][posX] = new Tile(SIZE_POLICKA_X * posX, SIZE_POLICKA_Y * posY, type);
         }
     }
 

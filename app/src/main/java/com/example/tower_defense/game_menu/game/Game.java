@@ -1,7 +1,7 @@
 package com.example.tower_defense.game_menu.game;
 
-import static com.example.tower_defense.game_menu.Constants.Dimensions.Xpolicka;
-import static com.example.tower_defense.game_menu.Constants.Dimensions.Ypolicka;
+import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLICKA_X;
+import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLICKA_Y;
 
 import android.content.Context;
 
@@ -63,9 +63,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
                canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
             }
         }
-
-
-
         holder.unlockCanvasAndPost(canvas);
     }
 
@@ -75,7 +72,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
         for (int i = 0; i < 10; i++) {
             synchronized (this.enemies) {
-                this.enemies.add(new entity(1, rand.nextInt(1), enemiesList.MAGMA_CRAB, 3));
+                this.enemies.add(new entity(1, rand.nextInt(1), enemiesList.MAGMA_CRAB, rand.nextInt(5) + 4));
             }
         }
     }
@@ -102,13 +99,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-
-            if (event.getX() < GameActivity.getMapSizeX() * Xpolicka && event.getY() < GameActivity.getMapSizeY() * Ypolicka) {
+            if (event.getX() < GameActivity.getMapSizeX() * SIZE_POLICKA_X && event.getY() < GameActivity.getMapSizeY() * SIZE_POLICKA_Y) {
                 this.tm.setSelectedTyle(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
             }
-
-
             //this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
         }
         return true;
@@ -144,7 +137,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
                 fps = 0;
                 lastFPScheck += 1000;
             }
-
         }
     }
 
@@ -153,26 +145,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
             for (entity e: this.enemies) {
                 e.move(delta);
             }
-
-
-            /*int direction = 0; //0 = y--, 1 = x++, 2 = y++, 3 = x--
-            for (entity e: this.enemies) {
-                direction = this.rand.nextInt(4);
-                switch (direction) {
-                    case 0:
-                        e.setPosY((e.getPosY() - 4) * delta);
-                        break;
-                    case 1:
-                        e.setPosX((e.getPosX() + 4) * delta);
-                        break;
-                    case 2:
-                        e.setPosY((e.getPosY() + 4)* delta);
-                        break;
-                    case 3:
-                        e.setPosX((e.getPosX() - 4) * delta);
-                        break;
-                }
-            }*/
         }
     }
 }

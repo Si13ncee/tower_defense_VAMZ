@@ -1,6 +1,6 @@
 package com.example.tower_defense.game_menu.spirtesControl.sideBar;
 
-import static com.example.tower_defense.game_menu.Constants.Dimensions.Xpolicka;
+import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLICKA_X;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,14 +11,14 @@ import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 
 public class SideBar implements IBitMapFunctions {
-    private static final int statBarSizeX = 3 * Xpolicka;
+    private static final int statBarSizeX = 3 * SIZE_POLICKA_X;
 
     private final Bitmap spriteSheet;
     private final int posX;
     private final int posY;
 
     public SideBar() {
-        this.posX = Xpolicka * GameActivity.getMapSizeX();
+        this.posX = SIZE_POLICKA_X * GameActivity.getMapSizeX();
         this.posY = 0;
 
         this.options.inScaled = false;

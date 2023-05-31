@@ -56,14 +56,14 @@ public class entity {
                 }
                 break;
             case 1:
-                if (this.posX + this.speed + this.enemyType.getxSize() < GameActivity.getScreenWidth()) {
+                if (this.posX + this.speed + this.enemyType.getxSize() < Constants.MapDimension.SIZE_X) {
                     this.posX += this.speed * delta * 60;
                 } else {
                     this.changeDirection((this.eDirection + rand.nextInt(20)) % 4);
                 }
                 break;
             case 2:
-                if (this.posY + this.speed + this.enemyType.getySize() < GameActivity.getScreenHeight()) {
+                if (this.posY + this.speed + this.enemyType.getySize() < Constants.MapDimension.SIZE_Y) {
                     this.posY += this.speed * delta * 60;
                 } else {
                     this.changeDirection((this.eDirection + rand.nextInt(20)) % 4);

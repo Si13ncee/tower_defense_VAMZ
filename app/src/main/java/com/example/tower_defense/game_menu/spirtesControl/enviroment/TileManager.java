@@ -34,17 +34,14 @@ public class TileManager implements IBitMapFunctions {
     }
 
     private void createMap() {
-        //40x25 rozmery
-        Random rand = new Random();
         synchronized (this.tiles) {
             for (int posY = 0; posY < GameActivity.getMapSizeY(); posY++) {
                 for (int posX = 0; posX < GameActivity.getMapSizeX(); posX++) {
-                    if (rand.nextInt(2) == 0) {
-                        this.createTile(ETileType.GRASS, posX,  posY);
+                    if (posX == 0 && posY == 0 || posX == GameActivity.getMapSizeX() - 1 && posY == GameActivity.getMapSizeY() - 1) {
+                        this.createTile(ETileType.ROAD, posX,  posY);
                     } else {
-                        this.createTile(ETileType.ROAD, posX, posY);
+                        this.createTile(ETileType.GRASS, posX,  posY);
                     }
-
                 }
             }
         }

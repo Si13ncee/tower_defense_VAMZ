@@ -4,7 +4,6 @@ import android.content.Context;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -13,18 +12,18 @@ import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
-import com.example.tower_defense.R;
+
 import com.example.tower_defense.game_menu.GameActivity;
-import com.example.tower_defense.game_menu.spirtesControl.Towers.towerList;
+
 import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
-import com.example.tower_defense.game_menu.spirtesControl.enviroment.ETileType;
+
 import com.example.tower_defense.game_menu.spirtesControl.enviroment.TileManager;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import kotlin.jvm.Synchronized;
+
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
@@ -70,7 +69,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
         for (int i = 0; i < 10; i++) {
             synchronized (this.enemies) {
-                this.enemies.add(new entity(rand.nextInt(GameActivity.getScreenWidth()), rand.nextInt(GameActivity.getScreenHeight()), enemiesList.MAGMA_CRAB));
+                this.enemies.add(new entity(rand.nextInt(GameActivity.getScreenWidth()), rand.nextInt(GameActivity.getScreenHeight()), enemiesList.MAGMA_CRAB, 3));
             }
         }
     }
@@ -107,38 +106,63 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
     @Override
     public void run() {
+
+        long lastFPScheck = System.currentTimeMillis();
+        int fps = 0;
+
+        long lastDelta = System.nanoTime();
+        long nanoSec = 1_000_000_000;
+
         while (true) {
+
+            long nowDelta = System.nanoTime();
+            double timeSinceLastDelta = nowDelta - lastDelta;
+            double delta = timeSinceLastDelta / nanoSec;
+
             try {
-                this.update();
+                this.update(delta);
                 this.render();
             } catch (NullPointerException npt) {
                 System.out.println("npt");
                 break;
             }
 
+            fps++;
+            lastDelta = nowDelta;
+            if (System.currentTimeMillis() - lastFPScheck >= 1000) {
+                System.out.println("FPS: " + fps);
+                fps = 0;
+                lastFPScheck += 1000;
+            }
+
         }
     }
 
-    private void update() {
+    private void update(double delta) {
         synchronized (this.enemies) {
-            int direction = 0; //0 = y--, 1 = x++, 2 = y++, 3 = x--
+            for (entity e: this.enemies) {
+                e.move(delta);
+            }
+
+
+            /*int direction = 0; //0 = y--, 1 = x++, 2 = y++, 3 = x--
             for (entity e: this.enemies) {
                 direction = this.rand.nextInt(4);
                 switch (direction) {
                     case 0:
-                        e.setPosY(e.getPosY() - 4);
+                        e.setPosY((e.getPosY() - 4) * delta);
                         break;
                     case 1:
-                        e.setPosX(e.getPosX() + 4);
+                        e.setPosX((e.getPosX() + 4) * delta);
                         break;
                     case 2:
-                        e.setPosY(e.getPosY() + 4);
+                        e.setPosY((e.getPosY() + 4)* delta);
                         break;
                     case 3:
-                        e.setPosX(e.getPosX() - 4);
+                        e.setPosX((e.getPosX() - 4) * delta);
                         break;
                 }
-            }
+            }*/
         }
     }
 }

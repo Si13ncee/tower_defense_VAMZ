@@ -12,6 +12,8 @@ public enum enemiesList implements IBitMapFunctions {
 
     MAGMA_CRAB(R.drawable.magma_crab);
     private final Bitmap spriteSheet;
+    private final int xSize = 64;
+    private final int ySize = 57;
 
     private final Bitmap[][] sprite = new Bitmap[9][8];
 
@@ -21,11 +23,18 @@ public enum enemiesList implements IBitMapFunctions {
 
         for (int i = 0; i < sprite.length; i++) {
             for (int j = 0; j < sprite[i].length; j++)
-                sprite[i][j] = getScaledBitmap(Bitmap.createBitmap(spriteSheet,64*j, 57*i, 64, 57));
+                sprite[i][j] = getScaledBitmap(Bitmap.createBitmap(spriteSheet,xSize*j, ySize*i, xSize, ySize));
         }
     }
     public Bitmap getSpriteSheet() {
         return spriteSheet;
+    }
+    public int getxSize() {
+        return xSize;
+    }
+
+    public int getySize() {
+        return ySize;
     }
 
     @Override

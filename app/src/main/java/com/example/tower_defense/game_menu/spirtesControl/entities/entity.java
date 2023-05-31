@@ -1,6 +1,5 @@
 package com.example.tower_defense.game_menu.spirtesControl.entities;
 
-import android.graphics.Bitmap;
 
 import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;

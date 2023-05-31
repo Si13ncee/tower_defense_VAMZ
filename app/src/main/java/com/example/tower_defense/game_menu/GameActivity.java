@@ -23,6 +23,7 @@ public class GameActivity extends AppCompatActivity {
 
 
 
+
     public static Context getGameContext() {
         return context;
     }
@@ -77,7 +78,7 @@ public class GameActivity extends AppCompatActivity {
             getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES; //výrez pre kameru
         }
 
-        scalingX = ((double) ScreenWidth / (mapSizeX) )/ 32;
+        scalingX = ((double) ScreenWidth / (mapSizeX + 3) )/ 32;
         scalingY = ((double) ScreenHeight / mapSizeY) / 32;
         System.out.println("Scaling: " + scalingY);
         setContentView(new Game(this));

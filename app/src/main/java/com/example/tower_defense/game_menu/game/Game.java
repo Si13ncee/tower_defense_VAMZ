@@ -19,6 +19,7 @@ import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
 
 import com.example.tower_defense.game_menu.spirtesControl.enviroment.TileManager;
+import com.example.tower_defense.game_menu.spirtesControl.sideBar.SideBar;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -33,6 +34,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     private ArrayList<entity> enemies = new ArrayList<>();
     private Thread gameLoopThread;
     private TileManager tm = new TileManager();
+    private SideBar sb = new SideBar();
 
 
     public Game(Context context) {
@@ -50,7 +52,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
         canvas.drawColor(Color.BLACK);
 
         this.tm.renderTiles(canvas);
-
+        this.sb.render(canvas);
 
         synchronized(this.enemies) {
             for (entity e: enemies) {
@@ -69,7 +71,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
         for (int i = 0; i < 10; i++) {
             synchronized (this.enemies) {
-                this.enemies.add(new entity(rand.nextInt(GameActivity.getScreenWidth()), rand.nextInt(GameActivity.getScreenHeight()), enemiesList.MAGMA_CRAB, 3));
+                this.enemies.add(new entity(1, rand.nextInt(1), enemiesList.MAGMA_CRAB, 3));
             }
         }
     }

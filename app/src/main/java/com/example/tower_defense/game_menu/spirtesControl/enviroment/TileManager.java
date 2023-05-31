@@ -1,19 +1,21 @@
 package com.example.tower_defense.game_menu.spirtesControl.enviroment;
 
+import static com.example.tower_defense.game_menu.Constants.Dimensions.Xpolicka;
+import static com.example.tower_defense.game_menu.Constants.Dimensions.Ypolicka;
+
 import android.graphics.Canvas;
 
 
+import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 import com.example.tower_defense.game_menu.spirtesControl.player.EPlayerControl;
 
-import java.util.Random;
 
 public class TileManager implements IBitMapFunctions {
 
 
-    private static final int Ypolicka = (int) (32 * GameActivity.getScalingY());
-    private static final int Xpolicka = (int) (32 * GameActivity.getScalingX());
+
 
     private final Tile[][] tiles = new Tile[GameActivity.getMapSizeY()][GameActivity.getMapSizeX()];
     private int tyleSelected = 0;
@@ -62,12 +64,16 @@ public class TileManager implements IBitMapFunctions {
                         this.tyleSelected++;
                         if (0 <= this.tyleSelected && !(this.tyleSelected > 15)) {
                             c.drawBitmap(this.selectionAnimation[0].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
+
                         } else if (15 <= this.tyleSelected && !(this.tyleSelected > 30)) {
                             c.drawBitmap(this.selectionAnimation[1].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
+
                         } else if (30 <= this.tyleSelected && !(this.tyleSelected > 45)) {
                             c.drawBitmap(this.selectionAnimation[2].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
+
                         } else if (45 <= this.tyleSelected && !(this.tyleSelected > 60)) {
                             c.drawBitmap(this.selectionAnimation[1].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
+
                         } else {
                             c.drawBitmap(this.selectionAnimation[0].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
                             this.tyleSelected = 0;

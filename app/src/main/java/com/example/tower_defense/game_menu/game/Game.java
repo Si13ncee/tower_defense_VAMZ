@@ -1,5 +1,8 @@
 package com.example.tower_defense.game_menu.game;
 
+import static com.example.tower_defense.game_menu.Constants.Dimensions.Xpolicka;
+import static com.example.tower_defense.game_menu.Constants.Dimensions.Ypolicka;
+
 import android.content.Context;
 
 import android.graphics.Canvas;
@@ -13,6 +16,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 
 
+import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 
 import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
@@ -28,13 +32,13 @@ import java.util.Random;
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnable {
 
-    private Random rand;
+    private final Random rand;
 
-    private SurfaceHolder holder;
+    private final SurfaceHolder holder;
     private ArrayList<entity> enemies = new ArrayList<>();
-    private Thread gameLoopThread;
-    private TileManager tm = new TileManager();
-    private SideBar sb = new SideBar();
+    private final Thread gameLoopThread;
+    private final TileManager tm = new TileManager();
+    private final SideBar sb = new SideBar();
 
 
     public Game(Context context) {
@@ -99,7 +103,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
+
+            if (event.getX() < GameActivity.getMapSizeX() * Xpolicka && event.getY() < GameActivity.getMapSizeY() * Ypolicka) {
                 this.tm.setSelectedTyle(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
+            }
+
 
             //this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
         }

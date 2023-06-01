@@ -23,7 +23,9 @@ import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
 
 import com.example.tower_defense.game_menu.spirtesControl.enviroment.TileManager;
-import com.example.tower_defense.game_menu.spirtesControl.sideBar.SideBar;
+import com.example.tower_defense.game_menu.spirtesControl.ui.button.ButtonImages;
+import com.example.tower_defense.game_menu.spirtesControl.ui.button.CustomButton;
+import com.example.tower_defense.game_menu.spirtesControl.ui.sideBar.SideBar;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -39,6 +41,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     private final Thread gameLoopThread;
     private final TileManager tm = new TileManager();
     private final SideBar sb = new SideBar();
+    private boolean gameStart = false;
+    private CustomButton buttonArcherTower;
+
 
 
     public Game(Context context) {
@@ -49,6 +54,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
         this.gameLoopThread = new Thread(this);
         this.rand = new Random();
+
+        this.buttonArcherTower = new CustomButton(Constants.MapDimension.SIZE_X + 5, 1 , 80, 110);
     }
 
     public void render() {
@@ -57,6 +64,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
         this.tm.renderTiles(canvas);
         this.sb.render(canvas);
+
+        canvas.drawBitmap(
+                ButtonImages.ARCHER_TOWER_BUTTON_UNPRESSED.getButtonImage(
+                        this.buttonArcherTower.isPushed()),
+                        this.buttonArcherTower.getHitbox().left,
+                        this.buttonArcherTower.getHitbox().top,
+                        null);
 
         synchronized(this.enemies) {
             for (entity e: enemies) {
@@ -102,6 +116,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
             if (event.getX() < GameActivity.getMapSizeX() * SIZE_POLICKA_X && event.getY() < GameActivity.getMapSizeY() * SIZE_POLICKA_Y) {
                 this.tm.setSelectedTyle(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
             }
+
             //this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
         }
         return true;
@@ -141,10 +156,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     }
 
     private void update(double delta) {
-        synchronized (this.enemies) {
-            for (entity e: this.enemies) {
-                e.move(delta);
+        if (this.gameStart) {
+            synchronized (this.enemies) {
+                for (entity e: this.enemies) {
+                    e.move(delta);
+                }
             }
         }
+
     }
 }

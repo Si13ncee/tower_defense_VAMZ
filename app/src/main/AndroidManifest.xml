@@ -14,7 +14,9 @@
         <activity
             android:name=".game_menu.GameActivity"
             android:exported="false"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+
+            />
         <activity
             android:name=".main_menu.MainMenu"
             android:exported="true" >

@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".game_menu.GameActivity">
 
+    <Button
+        android:id="@+id/archerTowerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

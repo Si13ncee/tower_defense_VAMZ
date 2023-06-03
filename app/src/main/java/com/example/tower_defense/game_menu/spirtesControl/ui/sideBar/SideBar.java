@@ -6,13 +6,17 @@ import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLI
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 
 import com.example.tower_defense.R;
 import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
+import com.example.tower_defense.game_menu.spirtesControl.enviroment.Tile;
 import com.example.tower_defense.game_menu.spirtesControl.ui.button.ButtonImages;
 import com.example.tower_defense.game_menu.spirtesControl.ui.button.CustomButton;
+
+import java.util.ArrayList;
 
 public class SideBar implements IBitMapFunctions {
     private static final int statBarSizeX = GameActivity.getScreenWidth() - Constants.MapDimension.SIZE_X;
@@ -20,14 +24,17 @@ public class SideBar implements IBitMapFunctions {
     private final Bitmap spriteSheet;
     private final int posX = Constants.MapDimension.SIZE_X;
     private final int posY = 0;
+    private ArrayList<CustomButton> btns = new ArrayList<CustomButton>();
     private CustomButton grassBtn;
     private CustomButton roadBtn;
+    private CustomButton buttonArcherTower;
 
     public SideBar() {
         this.options.inScaled = false;
         this.spriteSheet = this.getScaledBitmap(BitmapFactory.decodeResource(GameActivity.getGameContext().getResources(), R.drawable.sidebar, options));
-        this.grassBtn = new CustomButton(Constants.MapDimension.SIZE_X + 10, 200, 40, 40);
-        this.roadBtn = new CustomButton(Constants.MapDimension.SIZE_X + 50, 200, 40, 40);
+        this.btns.add(this.grassBtn = new CustomButton(Constants.MapDimension.SIZE_X + 10, 200, 40, 40));
+        this.btns.add(this.roadBtn = new CustomButton(Constants.MapDimension.SIZE_X + 50, 200, 40, 40));
+        this.btns.add(this.buttonArcherTower = new CustomButton(Constants.MapDimension.SIZE_X + 5, 1 , 80, 110));
     }
 
 
@@ -40,6 +47,7 @@ public class SideBar implements IBitMapFunctions {
         canvas.drawBitmap(this.spriteSheet, this.posX, this.posY, null);
         this.renderButton(this.grassBtn, this.grassBtn.isPushed(), ButtonImages.GRASS_BUTTON_PRESSED, ButtonImages.GRASS_BUTTON_UNPRESSED, canvas);
         this.renderButton(this.roadBtn, this.roadBtn.isPushed(), ButtonImages.ROAD_BUTTON_PRESSED, ButtonImages.ROAD_BUTTON_UNPRESSED, canvas);
+        this.renderButton(this.buttonArcherTower, this.buttonArcherTower.isPushed(), ButtonImages.ARCHER_TOWER_BUTTON_PRESSED, ButtonImages.ARCHER_TOWER_BUTTON_UNPRESSED, canvas);
     }
 
     public CustomButton getGrassBtn() {
@@ -64,5 +72,21 @@ public class SideBar implements IBitMapFunctions {
                         null
             );
         }
+    }
+
+    private boolean isIn(MotionEvent e, CustomButton b) {
+        return b.getHitbox().contains(e.getX(),e.getY());
+    }
+
+    public boolean checkIfAnyBtnIsPressed(MotionEvent event, Tile selectedTile) {
+        for (CustomButton cb : this.btns) {
+            if (isIn(event, cb) && selectedTile != null && event.getAction() == MotionEvent.ACTION_DOWN) {
+                cb.setPushed(true);
+                return true;
+            } else {
+                cb.setPushed(false);
+            }
+        }
+        return false;
     }
 }

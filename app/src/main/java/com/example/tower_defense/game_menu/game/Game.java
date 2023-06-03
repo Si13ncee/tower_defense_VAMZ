@@ -55,8 +55,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
         this.gameLoopThread = new Thread(this);
         this.rand = new Random();
-
-        this.buttonArcherTower = new CustomButton(Constants.MapDimension.SIZE_X + 5, 1 , 80, 110);
     }
 
     public void render() {
@@ -65,24 +63,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
         this.tm.renderTiles(canvas);
         this.sb.render(canvas);
-
-        if (this.buttonArcherTower.isPushed()) {
-            canvas.drawBitmap(
-                    ButtonImages.ARCHER_TOWER_BUTTON_PRESSED.getButtonImage(
-                            this.buttonArcherTower.isPushed()),
-                    this.buttonArcherTower.getHitbox().left,
-                    this.buttonArcherTower.getHitbox().top,
-                    null);
-        } else {
-            canvas.drawBitmap(
-                    ButtonImages.ARCHER_TOWER_BUTTON_UNPRESSED.getButtonImage(
-                            this.buttonArcherTower.isPushed()),
-                    this.buttonArcherTower.getHitbox().left,
-                    this.buttonArcherTower.getHitbox().top,
-                    null);
-        }
-
-
         synchronized(this.enemies) {
             for (entity e: enemies) {
                canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
@@ -127,22 +107,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (event.getX() < GameActivity.getMapSizeX() * SIZE_POLICKA_X && event.getY() < GameActivity.getMapSizeY() * SIZE_POLICKA_Y) {
                 this.tm.setSelectedTile(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
-
-            }
-            if (isIn(event, this.buttonArcherTower) && this.tm.getSelectedTile() != null) {
-                this.buttonArcherTower.setPushed(true);
-            }
-
-            //this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
-        }
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (isIn(event, this.buttonArcherTower)) {
-                if (this.buttonArcherTower.isPushed() && this.tm.getSelectedTile() != null) {
-                    this.buttonArcherTower.setPushed(false);
-                    this.tm.createTile(ETileType.ROAD,this.tm.getSelectedTile().getPosX() / SIZE_POLICKA_X, this.tm.getSelectedTile().getPosY() / SIZE_POLICKA_Y);
-                }
             }
         }
+        this.sb.checkIfAnyBtnIsPressed(event, this.tm.getSelectedTile());
         return true;
     }
 

@@ -4,6 +4,7 @@ import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLI
 import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLICKA_Y;
 
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 
 
 import com.example.tower_defense.game_menu.GameActivity;
@@ -125,4 +126,6 @@ public class TileManager implements IBitMapFunctions {
         }
 
     }
+
+
 }

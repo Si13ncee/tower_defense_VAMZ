@@ -12,6 +12,7 @@ import com.example.tower_defense.R;
 import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
+import com.example.tower_defense.game_menu.spirtesControl.enviroment.ETileType;
 import com.example.tower_defense.game_menu.spirtesControl.enviroment.Tile;
 import com.example.tower_defense.game_menu.spirtesControl.ui.button.ButtonImages;
 import com.example.tower_defense.game_menu.spirtesControl.ui.button.CustomButton;
@@ -29,12 +30,13 @@ public class SideBar implements IBitMapFunctions {
     private CustomButton roadBtn;
     private CustomButton buttonArcherTower;
 
+
     public SideBar() {
         this.options.inScaled = false;
         this.spriteSheet = this.getScaledBitmap(BitmapFactory.decodeResource(GameActivity.getGameContext().getResources(), R.drawable.sidebar, options));
-        this.btns.add(this.grassBtn = new CustomButton(Constants.MapDimension.SIZE_X + 10, 200, 40, 40));
-        this.btns.add(this.roadBtn = new CustomButton(Constants.MapDimension.SIZE_X + 50, 200, 40, 40));
-        this.btns.add(this.buttonArcherTower = new CustomButton(Constants.MapDimension.SIZE_X + 5, 1 , 80, 110));
+        this.btns.add(this.grassBtn = new CustomButton(Constants.MapDimension.SIZE_X + 10, Constants.MapDimension.SIZE_Y - 90, 80, 80));
+        this.btns.add(this.roadBtn = new CustomButton(Constants.MapDimension.SIZE_X + 100, Constants.MapDimension.SIZE_Y - 90, 80, 80));
+        this.btns.add(this.buttonArcherTower = new CustomButton(Constants.MapDimension.SIZE_X + 10, 10 , 80, 110));
     }
 
 
@@ -43,11 +45,16 @@ public class SideBar implements IBitMapFunctions {
         return Bitmap.createScaledBitmap(bitmap, statBarSizeX, GameActivity.getScreenHeight(), false);
     }
 
-    public void render(Canvas canvas) {
+    public void render(Canvas canvas, boolean gameStarted) {
         canvas.drawBitmap(this.spriteSheet, this.posX, this.posY, null);
-        this.renderButton(this.grassBtn, this.grassBtn.isPushed(), ButtonImages.GRASS_BUTTON_PRESSED, ButtonImages.GRASS_BUTTON_UNPRESSED, canvas);
-        this.renderButton(this.roadBtn, this.roadBtn.isPushed(), ButtonImages.ROAD_BUTTON_PRESSED, ButtonImages.ROAD_BUTTON_UNPRESSED, canvas);
-        this.renderButton(this.buttonArcherTower, this.buttonArcherTower.isPushed(), ButtonImages.ARCHER_TOWER_BUTTON_PRESSED, ButtonImages.ARCHER_TOWER_BUTTON_UNPRESSED, canvas);
+        if (gameStarted) {
+            this.renderButton(this.buttonArcherTower, this.buttonArcherTower.isPushed(), ButtonImages.ARCHER_TOWER_BUTTON_PRESSED, ButtonImages.ARCHER_TOWER_BUTTON_UNPRESSED, canvas);
+        } else {
+            this.renderButton(this.grassBtn, this.grassBtn.isPushed(), ButtonImages.GRASS_BUTTON_PRESSED, ButtonImages.GRASS_BUTTON_UNPRESSED, canvas);
+            this.renderButton(this.roadBtn, this.roadBtn.isPushed(), ButtonImages.ROAD_BUTTON_PRESSED, ButtonImages.ROAD_BUTTON_UNPRESSED, canvas);
+
+        }
+
     }
 
     public CustomButton getGrassBtn() {
@@ -78,15 +85,35 @@ public class SideBar implements IBitMapFunctions {
         return b.getHitbox().contains(e.getX(),e.getY());
     }
 
-    public boolean checkIfAnyBtnIsPressed(MotionEvent event, Tile selectedTile) {
+    public int checkIfBtnIsPressed(MotionEvent event, Tile selectedTile, boolean gameStarted) {
         for (CustomButton cb : this.btns) {
             if (isIn(event, cb) && selectedTile != null && event.getAction() == MotionEvent.ACTION_DOWN) {
                 cb.setPushed(true);
-                return true;
+
+                if (!gameStarted) {
+                    if (cb == this.grassBtn) {
+                        if (selectedTile.getTileType() == ETileType.ROAD) {
+                            selectedTile.changeTile(ETileType.GRASS);
+                            return -1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                    if (cb == this.roadBtn) {
+                        if (selectedTile.getTileType() == ETileType.GRASS) {
+                            selectedTile.changeTile(ETileType.ROAD);
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+
+                    }
+                }
+
             } else {
                 cb.setPushed(false);
             }
         }
-        return false;
+        return 0;
     }
 }

@@ -43,7 +43,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     private final TileManager tm = new TileManager();
     private final SideBar sb = new SideBar();
     private boolean gameStart = false;
-    private CustomButton buttonArcherTower;
+    private int placedRoads = 0;
 
 
 
@@ -58,11 +58,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     }
 
     public void render() {
+
         Canvas canvas = holder.lockCanvas();
         canvas.drawColor(Color.BLACK);
 
         this.tm.renderTiles(canvas);
-        this.sb.render(canvas);
+        this.sb.render(canvas, this.gameStart);
         synchronized(this.enemies) {
             for (entity e: enemies) {
                canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
@@ -109,7 +110,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
                 this.tm.setSelectedTile(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
             }
         }
-        this.sb.checkIfAnyBtnIsPressed(event, this.tm.getSelectedTile());
+        this.placedRoads += this.sb.checkIfBtnIsPressed(event, this.tm.getSelectedTile(), this.gameStart);
+        System.out.println("placedRoads: " + this.placedRoads);
+
         return true;
     }
 
@@ -129,6 +132,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
             double delta = timeSinceLastDelta / nanoSec;
 
             try {
+                if (this.placedRoads == 30) {
+                    this.gameStart = true;
+                }
                 this.update(delta);
                 this.render();
             } catch (NullPointerException npt) {

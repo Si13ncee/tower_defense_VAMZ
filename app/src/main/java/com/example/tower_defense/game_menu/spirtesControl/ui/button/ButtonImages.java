@@ -13,10 +13,10 @@ public enum ButtonImages implements IBitMapFunctions {
     ARCHER_TOWER_BUTTON_UNPRESSED(R.drawable.archer_tower_button_unpressed, 80, 110),
     ARCHER_TOWER_BUTTON_PRESSED(R.drawable.archer_tower_button_pressed, 80, 110),
 
-    GRASS_BUTTON_PRESSED(R.drawable.grass_pressed, 40, 40),
-    GRASS_BUTTON_UNPRESSED(R.drawable.grass_unpressed, 40, 40),
-    ROAD_BUTTON_PRESSED(R.drawable.road_pressed, 40, 40),
-    ROAD_BUTTON_UNPRESSED(R.drawable.road_unpressed, 40, 40);
+    GRASS_BUTTON_PRESSED(R.drawable.grass_pressed, 80, 80),
+    GRASS_BUTTON_UNPRESSED(R.drawable.grass_unpressed, 80, 80),
+    ROAD_BUTTON_PRESSED(R.drawable.road_pressed, 80, 80),
+    ROAD_BUTTON_UNPRESSED(R.drawable.road_unpressed, 80, 80);
 
 
     private int width, height;

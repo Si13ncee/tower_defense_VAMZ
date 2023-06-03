@@ -22,6 +22,7 @@ import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
 
+import com.example.tower_defense.game_menu.spirtesControl.enviroment.ETileType;
 import com.example.tower_defense.game_menu.spirtesControl.enviroment.TileManager;
 import com.example.tower_defense.game_menu.spirtesControl.ui.button.ButtonImages;
 import com.example.tower_defense.game_menu.spirtesControl.ui.button.CustomButton;
@@ -65,12 +66,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
         this.tm.renderTiles(canvas);
         this.sb.render(canvas);
 
-        canvas.drawBitmap(
-                ButtonImages.ARCHER_TOWER_BUTTON_UNPRESSED.getButtonImage(
-                        this.buttonArcherTower.isPushed()),
-                        this.buttonArcherTower.getHitbox().left,
-                        this.buttonArcherTower.getHitbox().top,
-                        null);
+        if (this.buttonArcherTower.isPushed()) {
+            canvas.drawBitmap(
+                    ButtonImages.ARCHER_TOWER_BUTTON_PRESSED.getButtonImage(
+                            this.buttonArcherTower.isPushed()),
+                    this.buttonArcherTower.getHitbox().left,
+                    this.buttonArcherTower.getHitbox().top,
+                    null);
+        } else {
+            canvas.drawBitmap(
+                    ButtonImages.ARCHER_TOWER_BUTTON_UNPRESSED.getButtonImage(
+                            this.buttonArcherTower.isPushed()),
+                    this.buttonArcherTower.getHitbox().left,
+                    this.buttonArcherTower.getHitbox().top,
+                    null);
+        }
+
 
         synchronized(this.enemies) {
             for (entity e: enemies) {
@@ -78,6 +89,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
             }
         }
         holder.unlockCanvasAndPost(canvas);
+
     }
 
     @Override
@@ -114,10 +126,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (event.getX() < GameActivity.getMapSizeX() * SIZE_POLICKA_X && event.getY() < GameActivity.getMapSizeY() * SIZE_POLICKA_Y) {
-                this.tm.setSelectedTyle(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
+                this.tm.setSelectedTile(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
+
+            }
+            if (isIn(event, this.buttonArcherTower) && this.tm.getSelectedTile() != null) {
+                this.buttonArcherTower.setPushed(true);
             }
 
             //this.tm.createTile(ETileType.GRASS, (int)event.getX(), (int)event.getY());
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (isIn(event, this.buttonArcherTower)) {
+                if (this.buttonArcherTower.isPushed() && this.tm.getSelectedTile() != null) {
+                    this.buttonArcherTower.setPushed(false);
+                    this.tm.createTile(ETileType.ROAD,this.tm.getSelectedTile().getPosX() / SIZE_POLICKA_X, this.tm.getSelectedTile().getPosY() / SIZE_POLICKA_Y);
+                }
+            }
         }
         return true;
     }
@@ -163,6 +187,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
                 }
             }
         }
-
     }
+
+    private boolean isIn(MotionEvent e, CustomButton b) {
+        return b.getHitbox().contains(e.getX(),e.getY());
+    }
+
 }

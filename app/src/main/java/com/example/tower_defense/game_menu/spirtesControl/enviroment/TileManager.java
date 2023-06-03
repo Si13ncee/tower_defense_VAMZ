@@ -17,8 +17,8 @@ public class TileManager implements IBitMapFunctions {
 
 
     private final Tile[][] tiles = new Tile[GameActivity.getMapSizeY()][GameActivity.getMapSizeX()];
-    private int tyleSelected = 0;
-    private Tile selectedTyle;
+    private int tileSelected = 0;
+    private Tile selectedTile;
     private final EPlayerControl[] selectionAnimation = new EPlayerControl[3];
 
 
@@ -60,22 +60,22 @@ public class TileManager implements IBitMapFunctions {
                 for (int posX = 0; posX < GameActivity.getMapSizeX(); posX++) {
                     c.drawBitmap(this.tiles[posY][posX].getTileType().getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
                     if (this.tiles[posY][posX].isSelected()) {
-                        this.tyleSelected++;
-                        if (0 <= this.tyleSelected && !(this.tyleSelected > 15)) {
+                        this.tileSelected++;
+                        if (0 <= this.tileSelected && !(this.tileSelected > 15)) {
                             c.drawBitmap(this.selectionAnimation[0].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
 
-                        } else if (15 <= this.tyleSelected && !(this.tyleSelected > 30)) {
+                        } else if (15 <= this.tileSelected && !(this.tileSelected > 30)) {
                             c.drawBitmap(this.selectionAnimation[1].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
 
-                        } else if (30 <= this.tyleSelected && !(this.tyleSelected > 45)) {
+                        } else if (30 <= this.tileSelected && !(this.tileSelected > 45)) {
                             c.drawBitmap(this.selectionAnimation[2].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
 
-                        } else if (45 <= this.tyleSelected && !(this.tyleSelected > 60)) {
+                        } else if (45 <= this.tileSelected && !(this.tileSelected > 60)) {
                             c.drawBitmap(this.selectionAnimation[1].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
 
                         } else {
                             c.drawBitmap(this.selectionAnimation[0].getSpriteSheet(), this.tiles[posY][posX].getPosX(), this.tiles[posY][posX].getPosY(), null);
-                            this.tyleSelected = 0;
+                            this.tileSelected = 0;
                         }
                     }
                 }
@@ -100,14 +100,14 @@ public class TileManager implements IBitMapFunctions {
         }
     }
 
-    public Tile getSelectedTyle() {
-        return selectedTyle;
+    public Tile getSelectedTile() {
+        return selectedTile;
     }
 
-    public void setSelectedTyle(Tile selectedTyle) {
-        if (this.selectedTyle == selectedTyle && this.selectedTyle != null) {
-            this.selectedTyle.setSelected(false);
-            this.selectedTyle = null;
+    public void setSelectedTile(Tile selectedTyle) {
+        if (this.selectedTile == selectedTyle && this.selectedTile != null) {
+            this.selectedTile.setSelected(false);
+            this.selectedTile = null;
         } else {
             this.unselectTile();
             synchronized (this.tiles) {
@@ -115,7 +115,7 @@ public class TileManager implements IBitMapFunctions {
                     for (int posX = 0; posX < GameActivity.getMapSizeX(); posX++) {
                         if (this.tiles[posY][posX] == selectedTyle) {
                             this.tiles[posY][posX].setSelected(true);
-                            this.selectedTyle = selectedTyle;
+                            this.selectedTile = selectedTyle;
 
                         }
                     }

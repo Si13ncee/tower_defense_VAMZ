@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.tower_defense.R;
+import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 
@@ -13,7 +14,10 @@ public enum ButtonImages implements IBitMapFunctions {
     ARCHER_TOWER_BUTTON_PRESSED(R.drawable.archer_tower_button_pressed, 80, 110),
 
     GRASS_BUTTON_PRESSED(R.drawable.grass_pressed, 40, 40),
-    GRASS_BUTTON_UNPRESSED(R.drawable.grass_unpressed, 40, 40);
+    GRASS_BUTTON_UNPRESSED(R.drawable.grass_unpressed, 40, 40),
+    ROAD_BUTTON_PRESSED(R.drawable.road_pressed, 40, 40),
+    ROAD_BUTTON_UNPRESSED(R.drawable.road_unpressed, 40, 40);
+
 
     private int width, height;
     private Bitmap normal;

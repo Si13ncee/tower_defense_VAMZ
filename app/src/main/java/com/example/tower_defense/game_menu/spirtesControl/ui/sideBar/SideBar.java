@@ -1,8 +1,5 @@
 package com.example.tower_defense.game_menu.spirtesControl.ui.sideBar;
 
-import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLICKA_X;
-import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLICKA_Y;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -25,10 +22,11 @@ public class SideBar implements IBitMapFunctions {
     private final Bitmap spriteSheet;
     private final int posX = Constants.MapDimension.SIZE_X;
     private final int posY = 0;
-    private ArrayList<CustomButton> btns = new ArrayList<CustomButton>();
+    private ArrayList<CustomButton> btns = new ArrayList<>();
     private CustomButton grassBtn;
     private CustomButton roadBtn;
     private CustomButton buttonArcherTower;
+    private int anim = 0;
 
 
     public SideBar() {
@@ -86,34 +84,50 @@ public class SideBar implements IBitMapFunctions {
     }
 
     public int checkIfBtnIsPressed(MotionEvent event, Tile selectedTile, boolean gameStarted) {
-        for (CustomButton cb : this.btns) {
-            if (isIn(event, cb) && selectedTile != null && event.getAction() == MotionEvent.ACTION_DOWN) {
-                cb.setPushed(true);
+        int returnedValue = 0;
+        synchronized (this.btns) {
+            for (CustomButton cb : this.btns) {
+                if (isIn(event, cb) && selectedTile != null && event.getAction() == MotionEvent.ACTION_DOWN) {
+                    cb.setPushed(true);
 
-                if (!gameStarted) {
-                    if (cb == this.grassBtn) {
-                        if (selectedTile.getTileType() == ETileType.ROAD) {
-                            selectedTile.changeTile(ETileType.GRASS);
-                            return -1;
-                        } else {
-                            return 0;
+                    if (!gameStarted) {
+                        if (cb == this.grassBtn) {
+                            if (selectedTile.getTileType() == ETileType.ROAD) {
+                                returnedValue = -1;
+                            } else {
+                                returnedValue = 0;
+                            }
+                        }
+                        if (cb == this.roadBtn) {
+                            if (selectedTile.getTileType() == ETileType.GRASS) {
+                                returnedValue = 1;
+                            } else {
+                                returnedValue = 0;
+                            }
+
                         }
                     }
-                    if (cb == this.roadBtn) {
-                        if (selectedTile.getTileType() == ETileType.GRASS) {
-                            selectedTile.changeTile(ETileType.ROAD);
-                            return 1;
-                        } else {
-                            return 0;
-                        }
 
-                    }
+                } else {
+                    cb.setPushed(false);
                 }
 
-            } else {
-                cb.setPushed(false);
             }
+            return returnedValue;
         }
-        return 0;
+
+    }
+
+    public void unpushAll() {
+        anim++;
+        if (anim >= 20) {
+            synchronized (this.btns) {
+                for (CustomButton cb : this.btns) {
+                    cb.setPushed(false);
+                }
+            }
+            anim = 0;
+        }
+
     }
 }

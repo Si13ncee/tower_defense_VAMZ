@@ -69,6 +69,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
                canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
             }
         }
+        this.sb.unpushAll();
+
+
+
         holder.unlockCanvasAndPost(canvas);
 
     }
@@ -108,10 +112,40 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (event.getX() < GameActivity.getMapSizeX() * SIZE_POLICKA_X && event.getY() < GameActivity.getMapSizeY() * SIZE_POLICKA_Y) {
                 this.tm.setSelectedTile(this.tm.getTile((int) (event.getY() / (32 * GameActivity.getScalingY())), (int) (event.getX() / (32 * GameActivity.getScalingX()))));
-            }
+            } else {
+                if (this.tm.getSelectedTile() != null) {
+                    int x = this.tm.getSelectedTile().getPosX() / SIZE_POLICKA_X;
+                    int y = this.tm.getSelectedTile().getPosY() / SIZE_POLICKA_Y;
+
+
+                    if (this.sb.checkIfBtnIsPressed(event, this.tm.getSelectedTile(), this.gameStart) == 1 && (
+                            this.tm.getTile(y+1, x).getTileType() == ETileType.ROAD ||
+                                    this.tm.getTile(y, x+1).getTileType() == ETileType.ROAD ||
+                                    this.tm.getTile(y-1, x).getTileType() == ETileType.ROAD ||
+                                    this.tm.getTile(y, x-1).getTileType() == ETileType.ROAD ||
+                                    this.placedRoads == 0)
+                    ) {
+                        this.tm.getSelectedTile().changeTile(ETileType.ROAD);
+
+                        this.placedRoads++;
+                        if (this.placedRoads == Constants.FieldConstants.RoadAmount) {
+                            this.tm.getSelectedTile().setEndingTile(true);
+                        }
+                        if (this.placedRoads == 1) {
+                            this.tm.getSelectedTile().setStartingTile(true);
+                        }
+                        System.out.println("placedRoads: " + this.placedRoads);
+                    } else if (this.sb.checkIfBtnIsPressed(event, this.tm.getSelectedTile(), this.gameStart) == -1) {
+                        this.tm.getSelectedTile().changeTile(ETileType.GRASS);
+                        this.placedRoads--;
+                    }
+                }
+
         }
-        this.placedRoads += this.sb.checkIfBtnIsPressed(event, this.tm.getSelectedTile(), this.gameStart);
-        System.out.println("placedRoads: " + this.placedRoads);
+
+
+        }
+
 
         return true;
     }
@@ -132,14 +166,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
             double delta = timeSinceLastDelta / nanoSec;
 
             try {
-                if (this.placedRoads == 30) {
+                if (this.placedRoads == Constants.FieldConstants.RoadAmount  && this.gameStart == false) {
+                    this.tm.calculatePath();
                     this.gameStart = true;
                 }
                 this.update(delta);
                 this.render();
             } catch (NullPointerException npt) {
                 System.out.println("npt");
-                break;
             }
 
             fps++;

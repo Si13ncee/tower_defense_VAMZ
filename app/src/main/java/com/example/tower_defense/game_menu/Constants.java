@@ -21,4 +21,8 @@ public final class Constants {
         public static final int SIZE_X = (int) (SIZE_POLICKA_X * GameActivity.getMapSizeX());
         public static final int SIZE_Y = (int) (SIZE_POLICKA_Y * GameActivity.getMapSizeY());
     }
+
+    public static final class FieldConstants {
+        public static final int RoadAmount = 8;
+    }
 }

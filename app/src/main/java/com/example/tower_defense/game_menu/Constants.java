@@ -23,6 +23,6 @@ public final class Constants {
     }
 
     public static final class FieldConstants {
-        public static final int RoadAmount = 8;
+        public static final int RoadAmount = 15;
     }
 }

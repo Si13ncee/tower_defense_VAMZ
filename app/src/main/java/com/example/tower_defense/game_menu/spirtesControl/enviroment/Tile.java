@@ -9,7 +9,7 @@ public class Tile {
     private boolean startingTile = false;
     private boolean endingTile = false;
 
-    private int costFromStart = 0;
+    private int costFromStart = 20;
     private double heuristicCost = 0;
     private Tile parentNode = null;
 

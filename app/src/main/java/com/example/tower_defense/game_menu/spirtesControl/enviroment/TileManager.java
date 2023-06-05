@@ -6,7 +6,6 @@ import static com.example.tower_defense.game_menu.Constants.Dimensions.SIZE_POLI
 import android.graphics.Canvas;
 
 
-import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 import com.example.tower_defense.game_menu.spirtesControl.player.EPlayerControl;
@@ -21,8 +20,7 @@ public class TileManager implements IBitMapFunctions {
     private int tileSelected = 0;
     private Tile selectedTile;
     private final EPlayerControl[] selectionAnimation = new EPlayerControl[3];
-    private final Tile[][] path = new Tile[GameActivity.getMapSizeY()][GameActivity.getMapSizeX()];
-    private ArrayList<Tile> lowestCostPath = new ArrayList<>();
+    private ArrayList<Tile> finalPath = new ArrayList<>();
 
 
     public TileManager() {
@@ -146,9 +144,10 @@ public class TileManager implements IBitMapFunctions {
         ArrayList<Tile> closed = new ArrayList<>();
         open.add(startTile);
 
-        Tile currentTile = null;
-        while (!open.isEmpty()) {
+        startTile.setCostFromStart(0);
 
+        while (!open.isEmpty()) {
+            Tile currentTile = null;
 
             for (Tile t : open) {
                 if (currentTile == null) {
@@ -157,22 +156,24 @@ public class TileManager implements IBitMapFunctions {
                     currentTile = t;
                 }
             }
+            int cost = currentTile.getCostFromStart() + 1;
 
             if (currentTile.equals(endTile)) {
+                endTile.setCostFromStart(cost - 1);
                 break;
             } else {
 
-                int cost = currentTile.getCostFromStart() + 1;
+
                 if (this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X).getTileType() == ETileType.ROAD) {
 
 
-                    if (!open.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X).getTileType())) {
+                    if (!open.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X).getTileType()) &&
+                    !closed.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X))) {
 
                         open.add(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X));
                         this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X).setParentNode(currentTile);
-                    }
-
-                    else {
+                        this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X).setCostFromStart(cost);
+                    } else {
                         if (cost < this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X).getCostFromStart() + 1) {
                             this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X).setCostFromStart(cost);
                             this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) - 1 ,currentTile.getPosX() / SIZE_POLICKA_X).setParentNode(currentTile);
@@ -185,9 +186,11 @@ public class TileManager implements IBitMapFunctions {
 
                 if (this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X)).getTileType() == ETileType.ROAD) {
 
-                    if (!open.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X)))) {
+                    if (!open.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X))) &&
+                    !closed.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X)))) {
                         open.add(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X)));
                         this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X)).setParentNode(currentTile);
+                        this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X)).setCostFromStart(cost);
                     } else {
                         if (cost < this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X)).getCostFromStart()) {
                             this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y) + 1, (currentTile.getPosX() / SIZE_POLICKA_X)).setCostFromStart(cost);
@@ -199,9 +202,11 @@ public class TileManager implements IBitMapFunctions {
 
                 if (this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1).getTileType() == ETileType.ROAD) {
 
-                    if (!open.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1))) {
+                    if (!open.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1)) &&
+                    !closed.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1))) {
                         open.add(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1));
                         this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1).setParentNode(currentTile);
+                        this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1).setCostFromStart(cost);
                     } else {
                         if (cost < this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1).getCostFromStart()) {
                             this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) + 1).setCostFromStart(cost);
@@ -212,9 +217,11 @@ public class TileManager implements IBitMapFunctions {
 
                 if (this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1).getTileType() == ETileType.ROAD) {
 
-                    if (!open.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1))) {
+                    if (!open.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1)) &&
+                    !closed.contains(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1))) {
                         open.add(this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1));
                         this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1).setParentNode(currentTile);
+                        this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1).setCostFromStart(cost);
                     } else {
                         if (cost < this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1).getCostFromStart()) {
                             this.getTile((currentTile.getPosY() / SIZE_POLICKA_Y), (currentTile.getPosX() / SIZE_POLICKA_X) - 1).setCostFromStart(cost);
@@ -222,14 +229,24 @@ public class TileManager implements IBitMapFunctions {
                         }
                     }
                 }
+
+                closed.add(currentTile);
+                open.remove(currentTile);
             }
+        }
+
+        Tile currentTile = endTile;
+        this.finalPath.add(currentTile);
+        while (!currentTile.equals(startTile)) {
+            currentTile = currentTile.getParentNode();
+            this.finalPath.add(currentTile);
         }
     }
 
     private void setHeuristicCosts(Tile endTile, ArrayList<Tile> roads) {
         // Manhattanska vzdialenost
         for (Tile t : roads) {
-            t.setHeuristicCost(Math.abs(t.getPosX() - endTile.getPosX()) + Math.abs(t.getPosY() - endTile.getPosY()));
+            t.setHeuristicCost(Math.abs((t.getPosX() - endTile.getPosX()) / SIZE_POLICKA_X) + (Math.abs(t.getPosY() - endTile.getPosY()))/ SIZE_POLICKA_Y);
         }
     }
 

@@ -11,6 +11,7 @@ import com.example.tower_defense.game_menu.spirtesControl.IBitMapFunctions;
 import com.example.tower_defense.game_menu.spirtesControl.player.EPlayerControl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class TileManager implements IBitMapFunctions {
@@ -21,6 +22,9 @@ public class TileManager implements IBitMapFunctions {
     private Tile selectedTile;
     private final EPlayerControl[] selectionAnimation = new EPlayerControl[3];
     private ArrayList<Tile> finalPath = new ArrayList<>();
+
+    private Tile startTile;
+    private Tile endTile;
 
 
     public TileManager() {
@@ -134,8 +138,8 @@ public class TileManager implements IBitMapFunctions {
     public void calculatePath() {
 
 
-        Tile startTile = this.findStartTile();
-        Tile endTile = this.findEndTile();
+        startTile = this.findStartTile();
+        endTile = this.findEndTile();
         ArrayList<Tile> roads = new ArrayList<>();
         roads = this.findRoads();
         this.setHeuristicCosts(endTile, roads);
@@ -241,6 +245,7 @@ public class TileManager implements IBitMapFunctions {
             currentTile = currentTile.getParentNode();
             this.finalPath.add(currentTile);
         }
+        Collections.reverse(this.finalPath);
     }
 
     private void setHeuristicCosts(Tile endTile, ArrayList<Tile> roads) {
@@ -288,5 +293,9 @@ public class TileManager implements IBitMapFunctions {
             }
         }
         return null;
+    }
+
+    public Tile getStartTile() {
+        return this.startTile;
     }
 }

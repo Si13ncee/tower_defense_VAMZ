@@ -22,9 +22,9 @@ import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
 
+import com.example.tower_defense.game_menu.spirtesControl.entities.entityManager;
 import com.example.tower_defense.game_menu.spirtesControl.enviroment.ETileType;
 import com.example.tower_defense.game_menu.spirtesControl.enviroment.TileManager;
-import com.example.tower_defense.game_menu.spirtesControl.ui.button.ButtonImages;
 import com.example.tower_defense.game_menu.spirtesControl.ui.button.CustomButton;
 import com.example.tower_defense.game_menu.spirtesControl.ui.sideBar.SideBar;
 
@@ -44,6 +44,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     private final SideBar sb = new SideBar();
     private boolean gameStart = false;
     private int placedRoads = 0;
+    private float firstWave;
+    private entityManager em = new entityManager();
 
 
 
@@ -64,14 +66,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
 
         this.tm.renderTiles(canvas);
         this.sb.render(canvas, this.gameStart);
-        synchronized(this.enemies) {
-            for (entity e: enemies) {
-               canvas.drawBitmap(e.getEnemyType().getSprite(0,0), e.getPosX(), e.getPosY(), null);
-            }
+        if (gameStart) {
+            this.em.render(canvas);
         }
         this.sb.unpushAll();
-
-
 
         holder.unlockCanvasAndPost(canvas);
 
@@ -80,12 +78,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
         gameLoopThread.start();
-
-        for (int i = 0; i < 10; i++) {
-            synchronized (this.enemies) {
-                this.enemies.add(new entity(1, rand.nextInt(1), enemiesList.MAGMA_CRAB, rand.nextInt(5) + 4));
-            }
-        }
     }
 
     @Override
@@ -159,7 +151,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
         long lastDelta = System.nanoTime();
         long nanoSec = 1_000_000_000;
 
+        this.firstWave = System.nanoTime();
+
         while (true) {
+            System.out.println(System.nanoTime() - this.firstWave);
 
             long nowDelta = System.nanoTime();
             double timeSinceLastDelta = nowDelta - lastDelta;
@@ -187,11 +182,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     }
 
     private void update(double delta) {
-        if (this.gameStart) {
-            synchronized (this.enemies) {
-                for (entity e: this.enemies) {
-                    e.move(delta);
-                }
+        synchronized (this.enemies) {
+            if (this.gameStart) {
+                this.em.update(delta);
             }
         }
     }

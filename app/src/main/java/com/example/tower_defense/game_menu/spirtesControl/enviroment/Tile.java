@@ -99,4 +99,8 @@ public class Tile {
     public void setParentNode(Tile parentNode) {
         this.parentNode = parentNode;
     }
+
+    public boolean isEndTile() {
+        return this.endingTile;
+    }
 }

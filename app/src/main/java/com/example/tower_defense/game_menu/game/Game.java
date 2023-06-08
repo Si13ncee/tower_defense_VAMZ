@@ -18,8 +18,6 @@ import androidx.annotation.NonNull;
 
 import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
-
-import com.example.tower_defense.game_menu.spirtesControl.entities.enemiesList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
 
 import com.example.tower_defense.game_menu.spirtesControl.entities.entityManager;
@@ -30,7 +28,7 @@ import com.example.tower_defense.game_menu.spirtesControl.ui.sideBar.SideBar;
 
 import java.util.ArrayList;
 import java.util.Random;
-
+import java.util.Timer;
 
 
 public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnable {
@@ -46,6 +44,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     private int placedRoads = 0;
     private float firstWave;
     private entityManager em = new entityManager();
+    private Timer timer = new Timer();
+
 
 
 
@@ -134,11 +134,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
                 }
 
         }
-
-
         }
-
-
         return true;
     }
 
@@ -154,7 +150,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
         this.firstWave = System.nanoTime();
 
         while (true) {
-            System.out.println(System.nanoTime() - this.firstWave);
 
             long nowDelta = System.nanoTime();
             double timeSinceLastDelta = nowDelta - lastDelta;
@@ -164,11 +159,14 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
                 if (this.placedRoads == Constants.FieldConstants.RoadAmount  && this.gameStart == false) {
                     this.tm.calculatePath();
                     this.gameStart = true;
+                    this.em.setStartingTile(this.tm.getStartTile());
+                    this.em.setCanSpawn(true);
+                    this.em.Spawning();
                 }
                 this.update(delta);
                 this.render();
             } catch (NullPointerException npt) {
-                System.out.println("npt");
+                System.out.println("Chyba npt");
             }
 
             fps++;
@@ -184,7 +182,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     private void update(double delta) {
         synchronized (this.enemies) {
             if (this.gameStart) {
-                this.em.update(delta);
+                this.em.update(delta, this.tm.getFinalPath());
             }
         }
     }

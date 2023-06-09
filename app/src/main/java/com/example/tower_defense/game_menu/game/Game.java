@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 
 import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
+import com.example.tower_defense.game_menu.spirtesControl.Towers.TowerManager;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
 
 import com.example.tower_defense.game_menu.spirtesControl.entities.entityManager;
@@ -40,6 +41,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
     private final Thread gameLoopThread;
     private final TileManager tm = new TileManager();
     private final SideBar sb = new SideBar();
+    private final TowerManager towerManager = new TowerManager();
     private boolean gameStart = false;
     private int placedRoads = 0;
     private float firstWave;

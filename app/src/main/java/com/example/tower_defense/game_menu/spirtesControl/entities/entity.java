@@ -5,7 +5,6 @@ import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.spirtesControl.enviroment.Tile;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class entity {
 
@@ -46,9 +45,6 @@ public class entity {
     }
 
     public void move(double delta, ArrayList<Tile> path) {
-
-
-        System.out.println("posX: " + this.posX + " posY: " + this.posY);
 
         if (this.pathPos < path.size() - 1) {
             Tile currentTile = path.get(this.pathPos);

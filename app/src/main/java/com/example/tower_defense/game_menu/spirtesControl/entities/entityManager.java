@@ -16,9 +16,17 @@ public class entityManager {
     public entityManager () {
     }
     public void update(double delta, ArrayList<Tile> path) {
+        ArrayList<entity> removedEnemies = new ArrayList<>();
         synchronized (this.enemies) {
             for (entity e : this.enemies) {
                 e.move(delta, path);
+                if (e.getPosX() / Constants.Dimensions.SIZE_POLICKA_X == path.get(path.size() - 1).getPosX() / Constants.Dimensions.SIZE_POLICKA_X &&
+                    e.getPosY() / Constants.Dimensions.SIZE_POLICKA_Y == path.get(path.size() - 1).getPosY() / Constants.Dimensions.SIZE_POLICKA_Y) {
+                        removedEnemies.add(e);
+                }
+            }
+            for (entity r : removedEnemies) {
+                this.enemies.remove(r);
             }
         }
     }

@@ -6,6 +6,7 @@ public class tower {
     private towerList towerType;
     private int damage;
     private float rangeRadius;
+    private int level = 1;
 
 
     public tower(int posX, int posY, towerList towerType, int rangeRadius) {
@@ -27,5 +28,10 @@ public class tower {
 
     public float getPosY() {
         return this.posY;
+    }
+
+    public boolean upgradeTower() {
+        this.level++;
+        return true;
     }
 }

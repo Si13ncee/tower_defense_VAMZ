@@ -33,8 +33,4 @@ public enum towerList implements IBitMapFunctions {
         return sprite[pos];
     }
 
-
-    public float getPosY() {
-        return
-    }
 }

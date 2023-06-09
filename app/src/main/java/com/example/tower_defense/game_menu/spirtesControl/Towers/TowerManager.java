@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 
-import java.util.ArrayList;
 
 public class TowerManager {
     private tower[][] towers = new tower[GameActivity.getMapSizeY()][GameActivity.getMapSizeX()];
@@ -13,10 +12,11 @@ public class TowerManager {
 
     }
 
-    public boolean addTower(int posX, int posY) {
+    public boolean addTower(int posX, int posY, towerList sprite) {
+        System.out.println(posX + " " + posY);
         synchronized (this.towers) {
-            if (this.towers[posX][posY] != null) {
-                this.towers[posX][posY] = new tower(posX * Constants.Dimensions.SIZE_POLICKA_X, posY * Constants.Dimensions.SIZE_POLICKA_Y, towerList.ARCHER, 5);
+            if (this.towers[posY][posX] == null) {
+                this.towers[posY][posX] = new tower(posX * Constants.Dimensions.SIZE_POLICKA_X, posY * Constants.Dimensions.SIZE_POLICKA_Y, sprite.getSprite(), 5);
                 return true;
             } else {
                 return false;
@@ -25,16 +25,17 @@ public class TowerManager {
     }
 
     public void render(Canvas c) {
-
+    synchronized (this.towers) {
         for (int posY = 0; posY < GameActivity.getMapSizeY(); posY++) {
             for (int posX = 0; posX < GameActivity.getMapSizeX(); posX++) {
 
                 if (this.towers[posY][posX] != null) {
-                    c.drawBitmap(this.towers[posY][posX].getTowerType().getSpriteSheet(), this.towers[posY][posX].getPosX(), this.towers[posY][posX].getPosY(), null);
+                    c.drawBitmap(this.towers[posY][posX].getTowerSprite(), this.towers[posY][posX].getPosX(), this.towers[posY][posX].getPosY(), null);
                 }
 
             }
         }
+    }
     }
 
 }

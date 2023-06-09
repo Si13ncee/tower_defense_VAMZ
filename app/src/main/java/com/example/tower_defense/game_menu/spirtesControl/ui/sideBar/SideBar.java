@@ -23,9 +23,9 @@ public class SideBar implements IBitMapFunctions {
     private final int posX = Constants.MapDimension.SIZE_X;
     private final int posY = 0;
     private ArrayList<CustomButton> btns = new ArrayList<>();
-    private CustomButton grassBtn;
-    private CustomButton roadBtn;
-    private CustomButton buttonArcherTower;
+    private CustomButton grassBtn; // -1
+    private CustomButton roadBtn; // +1
+    private CustomButton buttonArcherTower; // 10
     private int anim = 0;
 
 
@@ -105,6 +105,10 @@ public class SideBar implements IBitMapFunctions {
                                 returnedValue = 0;
                             }
 
+                        }
+                    } else {
+                        if (cb == this.buttonArcherTower) {
+                            return 10;
                         }
                     }
 

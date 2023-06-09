@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import com.example.tower_defense.game_menu.Constants;
 import com.example.tower_defense.game_menu.GameActivity;
 import com.example.tower_defense.game_menu.spirtesControl.Towers.TowerManager;
+import com.example.tower_defense.game_menu.spirtesControl.Towers.towerList;
 import com.example.tower_defense.game_menu.spirtesControl.entities.entity;
 
 import com.example.tower_defense.game_menu.spirtesControl.entities.entityManager;
@@ -70,6 +71,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
         this.sb.render(canvas, this.gameStart);
         if (gameStart) {
             this.em.render(canvas);
+            this.towerManager.render(canvas);
         }
         this.sb.unpushAll();
 
@@ -132,8 +134,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback, Runnabl
                     } else if (this.sb.checkIfBtnIsPressed(event, this.tm.getSelectedTile(), this.gameStart) == -1) {
                         this.tm.getSelectedTile().changeTile(ETileType.GRASS);
                         this.placedRoads--;
+                    } else if (this.sb.checkIfBtnIsPressed(event, this.tm.getSelectedTile(), this.gameStart) == 10) {
+                        this.towerManager.addTower(this.tm.getSelectedTile().getPosX() / SIZE_POLICKA_X, this.tm.getSelectedTile().getPosY() / SIZE_POLICKA_Y, towerList.ARCHER_LEVEL_0);
+
                     }
                 }
+
 
         }
         }
